@@ -218,18 +218,6 @@ private:
 
     WSAEventSelect(peer, io_event, FD_READ | FD_WRITE | FD_CLOSE);
 
-    /*auto reader = [this, peer, read_event] (std::vector<uint8_t>& buffer, size_t required_size) -> bool {
-      return network_io("read", peer, read_event, FD_READ, required_size, [peer, &buffer] (size_t offset, size_t length) -> int32_t {
-        return recv(peer, (char*) &buffer[offset], length, 0);
-      });
-    };
-
-    auto writer = [this, peer, write_event] (const std::vector<uint8_t>& buffer, size_t required_size) -> bool {
-      return network_io("write", peer, write_event, FD_WRITE, required_size, [peer, &buffer] (size_t offset, size_t length) -> int32_t {
-        return send(peer, (const char*) &buffer[offset], length, 0);
-      });
-    };*/
-
     std::vector<uint8_t> header;
     header.resize(6);
 
@@ -364,56 +352,6 @@ private:
 
     return true;
   }
-
-  /*bool network_io(const char* name, uint32_t peer, void* io_event, uint32_t io_flag, size_t required,
-                  const std::function<int32_t(uint32_t, uint32_t)>& operation) {
-
-    WSANETWORKEVENTS fired_events;
-    void* events[] = { stop_event, io_event };
-
-    size_t total_moved = 0;
-
-    while (true) {
-      logger::it->debug("TCP server: on peer {}, started wait.", name);
-      uint32_t result = WSAWaitForMultipleEvents(2, events, false, WSA_INFINITE, false);
-      logger::it->debug("TCP server: on peer {}, finished wait.", name);
-
-      if (result == WSA_WAIT_EVENT_0) {
-        logger::it->debug("TCP server: on peer {}, detected stop instruction.", name);
-        return false;
-      } else if (result == WSA_WAIT_FAILED) {
-        logger::it->error("TCP server: on peer {}, received wait failure.", name);
-        return false;
-      } else if (WSAEnumNetworkEvents(peer, io_event, &fired_events) == SOCKET_ERROR) {
-        logger::it->error("TCP server: on peer {}, failed to enumerate events.", name);
-        return false;
-      } else if ((fired_events.lNetworkEvents & FD_CLOSE) != 0) {
-        logger::it->warn("TCP server: on peer {}, detected socket close.", name);
-        return false;
-      } else if ((fired_events.lNetworkEvents & io_flag) != 0) {
-        int32_t current_moved = operation(total_moved, required - total_moved);
-
-        logger::it->debug("TCP server: on peer {}, moved {}.", name, current_moved);
-
-        if (current_moved == SOCKET_ERROR) {
-          int32_t error = WSAGetLastError();
-
-          if (error != WSAEWOULDBLOCK) {
-            logger::it->warn("TCP server: on peer {}, unexpected error code {}.", name, error);
-            return false;
-          } else {
-            continue;
-          }
-        } else {
-          total_moved += current_moved;
-
-          if (total_moved == required) {
-            return true;
-          }
-        }
-      }
-    }
-  }*/
 
   std::mutex mutex;
   std::condition_variable condition;
