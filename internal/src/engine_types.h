@@ -80,7 +80,7 @@ struct WXBuffer {
   /* 00Ch SIZE */
 };
 
-struct WXParticleEmitterData {
+struct WXParticleEmitterModuleData {
   // CParticleInitializerAlpha
   /* 000h */ WXBuffer<float> alpha;
   // CParticleInitializerColor
@@ -188,7 +188,12 @@ struct WXParticleEmitterData {
 
 struct WRenderParticleEmitter {
   /* 000h */ _pad(p000, 0x10);
-  /* 010h */ WXParticleEmitterData something;
+  /* 010h */ WXParticleEmitterModuleData emitter_data;
+  /* 270h */ _pad(p270, 0x74);
+  /* 2E4h */ uint32_t modificator_bitset;
+  /* 2E8h */ _pad(p2E8, 0x0C);
+  /* 2F4h */ uint32_t initializer_bitset;
+  /* 2F8h */
 };
 
 struct WName {
