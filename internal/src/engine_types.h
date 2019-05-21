@@ -89,7 +89,7 @@ struct WXParticleEmitterModuleData {
   /* 018h */ WXBuffer<float> lifetime;
   // CParticleInitializerPosition
   /* 024h */ WXBuffer<WXVector3> position;
-  /* 030h */ uint32_t p030; // or float, my sample had 0 here so hard to tell
+  /* 030h */ float position_offset;
   // CParticleInitializerRotation
   /* 034h */ WXBuffer<float> rotation;
   // CParticleInitializerRotation3D
@@ -100,7 +100,7 @@ struct WXParticleEmitterModuleData {
   /* 058h */ WXBuffer<WXVector3> rotation_rate_3d;
   // CParticleInitializerSize and CParticleInitializerSize3d
   /* 064h */ WXBuffer<WXVector2> size;
-  /* 070h */ WXBuffer<WXVector3> size_orientation;
+  /* 070h */ WXBuffer<WXVector3> size_3d;
   /* 07Ch */ uint8_t size_keep_ratio;
   /* 07Dh */ _pad(p07D, 3);
   // CParticleInitializerSpawnBox and CParticleInitializerSpawnCircle
@@ -111,16 +111,17 @@ struct WXParticleEmitterModuleData {
   /* 0A5h */ uint8_t spawn_surface_only;
   /* 0A6h */ _pad(p0A6, 2);
   /* 0A8h */ WXVector3 p0A8;
-  /* 0B4h */ _pad(p0B4, 12); // one big-ass pudding
+  /* 0B4h */ _pad(p0B4, 12);
   /* 0C0h */ float spawn_to_local_matrix[16];
-  /* 100h */ uint8_t p100; // STARTING FROM HERE IS PARSED AFTER p218
-  /* 101h */ uint8_t p101;
-  /* 102h */ uint8_t p102;
-  /* 103h */ uint8_t p103;
-  /* 104h */ uint8_t p104;
-  /* 105h */ uint8_t p105;
-  /* 106h */ uint8_t p106; // CONTINUES FROM p230
+  /* 100h */ uint8_t spawn_positive_x;
+  /* 101h */ uint8_t spawn_negative_x;
+  /* 102h */ uint8_t spawn_positive_y;
+  /* 103h */ uint8_t spawn_negative_y;
+  /* 104h */ uint8_t spawn_position_z;
+  /* 105h */ uint8_t spawn_negative_z;
+  /* 106h */ uint8_t spawn_velocity;
   /* 107h */ _pad(p107, 1);
+  // CParticleInitializerVelocity
   /* 108h */ WXBuffer<WXVector3> velocity;
   /* 114h */ uint8_t velocity_world_space;
   /* 115h */ _pad(p115, 3);
@@ -128,7 +129,7 @@ struct WXParticleEmitterModuleData {
   /* 124h */ WXBuffer<float> velocity_spread_scale;
   /* 130h */ uint8_t velocity_spread_conserve_momentum;
   /* 131h */ _pad(p131, 3);
-  /* 134h */ WXBuffer<float> p134;
+  /* 134h */ WXBuffer<float> texture_animation_initial_frame;
   /* 140h */ uint32_t p140; // or float
   /* 144h */ uint32_t p144; // or float
   /* 148h */ uint32_t p148; // or float
@@ -165,21 +166,21 @@ struct WXParticleEmitterModuleData {
   /* 208h */ WXBuffer<float> target_kill_radius;
   /* 214h */ float target_max_force;
   /* 218h */ WXBuffer<WXVector3> target_position;
-  /* 224h */ uint32_t p224; // or float
-  /* 228h */ uint32_t p228; // should be integer as it is initialized to FFFFFFFF in constructor
+  /* 224h */ float collision_spawn_probability;
+  /* 228h */ uint32_t collision_spawn_parent_emitter_index;
   /* 22Ch */ _pad(p22C, 4);
-  /* 230h */ uint64_t p230;
-  /* 238h */ uint32_t p238; // or float
-  /* 23Ch */ uint32_t p23C; // or float
-  /* 240h */ uint32_t p240; // or float
-  /* 244h */ uint32_t p244; // or float
-  /* 248h */ uint8_t p248;
-  /* 249h */ uint8_t p249;
+  /* 230h */ uint64_t collision_triggering_group_index;
+  /* 238h */ float collision_dynamic_friction;
+  /* 23Ch */ float collision_static_friction;
+  /* 240h */ float collision_restitution;
+  /* 244h */ float collision_velocity_dampening;
+  /* 248h */ uint8_t collision_disable_gravity;
+  /* 249h */ uint8_t collision_use_gpu;
   /* 24Ah */ _pad(p24A, 2);
-  /* 24Ch */ uint32_t p24C; // or float
-  /* 250h */ uint8_t p250;
+  /* 24Ch */ float collision_radius;
+  /* 250h */ uint8_t collision_kill_when_collide;
   /* 251h */ _pad(p251, 3);
-  /* 254h */ uint32_t collision_triggering_group_index;
+  /* 254h */ uint32_t collision_self_emitter_index;
   // CParticleModificatorAlphaByDistance
   /* 258h */ float alpha_by_distance_far;
   /* 25Ch */ float alpha_by_distance_near;
